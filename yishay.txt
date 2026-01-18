@@ -1,0 +1,48 @@
+import { Injectable } from '@nestjs/common';
+import * as fs from 'fs/promises';
+
+@Injectable()
+export class NotesService {
+  private readonly filePath = './notes.txt';
+
+  // פונקציה לעדכון סכום בתוך הקובץ
+  async updateAmount(oldAmount: string, newAmount: string) {
+    try {
+      // 1. קריאת כל תוכן הקובץ
+      const data = await fs.readFile(this.filePath, 'utf8');
+
+      // 2. בדיקה האם הסכום הישן בכלל קיים
+      if (!data.includes(oldAmount)) {
+        return 'הסכום הישן לא נמצא בקובץ.';
+      }
+
+      // 3. החלפת הסכום הישן בחדש (שינוי בזיכרון)
+      const updatedData = data.replace(oldAmount, newAmount);
+
+      // 4. כתיבת כל התוכן המעודכן חזרה לקובץ (דריסה)
+      await fs.writeFile(this.filePath, updatedData, 'utf8');
+
+      return `הסכום עודכן בהצלחה מ-${oldAmount} ל-${newAmount}`;
+    } catch (error) {
+      return 'שגיאה בעדכון הקובץ.';
+    }
+  }
+}
+
+
+
+nest new notes-app
+
+cd notes-app
+
+nest g resource notes
+
+npm i class-validator class-transformer
+
+npm run start:dev
+
+
+git remote add origin [הדבק_כאן_את_הקישור]
+git add .
+git commit -m "upload"
+git push -u origin master
